@@ -95,7 +95,7 @@ scripts/site/config.example.json 系列配置示例（大巴赛博盲盒）
   - 收藏栏用 localStorage（包 try/catch）。
   - 彩蛋：集齐全部款 → 上 4 下 4 两层发光展台 → 依次化成星光汇入光球 → 光柱 → 彩蛋角色登场。
 - 网页不要放声音；页面内嵌内容控制在 16MB 内（参考成品约 11MB）。
-- 字体：Google Fonts 用 `media="print" onload="this.media='all'"` 异步加载，国内网慢或离线时页面先用系统字体（苹方/微软雅黑）显示，不会卡白屏；`<head>` 里放 `<link rel="icon" href="data:,">`，避免请求不存在的 favicon.ico 报 404。模板里都已处理。
+- 字体：Google Fonts 用 `media="print" onload="this.media='all'"` 异步加载，国内网慢或离线时页面先用系统字体（苹方/微软雅黑）显示，不会卡白屏；网站图标由 `build_site.py` 自动用第一款公仔正面图的头部生成（64px PNG 内嵌），不用另外准备，也不会请求不存在的 favicon.ico 报 404。模板里都已处理。
 - 用 Playwright 截图检查：开盒各时间点、再拆一盒、跳过、彩蛋全流程，看控制台没有报错。
 - 发布为在线页面；本地另存一份 `index.html + figs/` 离线版。
 

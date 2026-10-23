@@ -90,6 +90,18 @@ def figure(proj, model, key, figs_dir, sprite=True):
     return static, spr
 
 
+def icon(proj, model, S=64):
+    """网站图标：第一款公仔正面图的头部，裁成正方形缩到 64px PNG。"""
+    im = Image.open(os.path.join(proj, '渲染', '公仔转盘', model, '正面.png')).convert('RGBA')
+    a = np.asarray(im)[..., 3]
+    ys, _ = np.nonzero(a > 140); y0, y1 = ys.min(), ys.max()
+    side = int((y1 - y0) * 0.48)                      # 头部大约占身高的四成，多留一点边
+    _, xs = np.nonzero(a[y0:y0 + side] > 140); cx = (xs.min() + xs.max()) / 2
+    head = im.crop((int(cx - side / 2), max(0, y0 - side // 20), int(cx + side / 2), max(0, y0 - side // 20) + side))
+    b = io.BytesIO(); head.resize((S, S), Image.LANCZOS).save(b, 'PNG', optimize=True)
+    return 'data:image/png;base64,' + base64.b64encode(b.getvalue()).decode()
+
+
 def main():
     if len(sys.argv) < 2:
         sys.exit('用法：python build_site.py <项目文件夹>')
@@ -111,7 +123,7 @@ def main():
     title = cfg['title']; hl = cfg.get('titleHighlight', '')
     rep = {'__TITLE_HTML__': title.replace(hl, '<b>' + hl + '</b>', 1) if hl else title, '__TITLE__': title,
            '__SLOGAN__': cfg.get('slogan', ''), '__INTRO__': cfg.get('intro', ''), '__EGG_NAME__': cfg['egg']['name'],
-           '__ACCENT__': cfg.get('accent', '#ffc400'), '__CFG__': json.dumps(pub, ensure_ascii=False),
+           '__ACCENT__': cfg.get('accent', '#ffc400'), '__ICON__': icon(proj, cfg['figures'][0]['model']), '__CFG__': json.dumps(pub, ensure_ascii=False),
            '__FRAMES__': json.dumps(frames), '__IMGS__': json.dumps(imgs), '__SPRITES__': json.dumps(sprites), '__HERO__': json.dumps(hero)}
     for k, v in rep.items(): t = t.replace(k, v)
     os.makedirs(out_dir, exist_ok=True)
