@@ -6,7 +6,7 @@ description: 把一个IP形象做成盲盒产品全套：2D款式设计→混元
 # IP 盲盒快捷工作流（通用版）
 
 把一个已有的 IP 形象，做成「N 款公仔 + 隐藏款 + 彩蛋」的盲盒，并产出：印刷盒面、照片级渲染、在线开盒网页、产品介绍。
-参考成品：大巴赛博盲盒（https://github.com/__GHUSER__/daba-cyber-blindbox 的 `docs/产品介绍.md`、`site/index.html`）。如果用户手上已有一套做好的网页源码和 Blender 脚本，优先复用，只换素材和文案；没有就按下面每一步的规格从头写。
+参考成品：大巴赛博盲盒（https://github.com/bigchen316/daba-cyber-blindbox 的 `docs/产品介绍.md`、`site/index.html`）。如果用户手上已有一套做好的网页源码和 Blender 脚本，优先复用，只换素材和文案；没有就按下面每一步的规格从头写。
 
 ## 工具包（本 skill 自带，开箱即用）
 

@@ -11,30 +11,30 @@
 **Claude Code（macOS / Linux）**，复制到终端回车：
 
 ```bash
-mkdir -p ~/.claude/skills && curl -fsSL https://github.com/__GHUSER__/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip -o /tmp/ip-blindbox-pipeline.zip && unzip -oq /tmp/ip-blindbox-pipeline.zip -d ~/.claude/skills
+mkdir -p ~/.claude/skills && curl -fsSL https://github.com/bigchen316/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip -o /tmp/ip-blindbox-pipeline.zip && unzip -oq /tmp/ip-blindbox-pipeline.zip -d ~/.claude/skills
 ```
 
 **Claude Code（Windows PowerShell）**，复制到 PowerShell 回车：
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null; Invoke-WebRequest https://github.com/__GHUSER__/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip -OutFile "$env:TEMP\ip-blindbox-pipeline.zip"; Expand-Archive -Force "$env:TEMP\ip-blindbox-pipeline.zip" "$HOME\.claude\skills"
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null; Invoke-WebRequest https://github.com/bigchen316/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip -OutFile "$env:TEMP\ip-blindbox-pipeline.zip"; Expand-Archive -Force "$env:TEMP\ip-blindbox-pipeline.zip" "$HOME\.claude\skills"
 ```
 
 **Claude Code 插件方式**，在 Claude Code 里依次输入：
 
 ```
-/plugin marketplace add __GHUSER__/daba-cyber-blindbox
+/plugin marketplace add bigchen316/daba-cyber-blindbox
 /plugin install ip-blindbox-pipeline@daba-skills
 ```
 
-**Claude 网页版 / 桌面版**：下载 [`ip-blindbox-pipeline.zip`](https://github.com/__GHUSER__/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip)，在 Claude 的设置里找到 Skills（技能），上传这个 zip 即可。
+**Claude 网页版 / 桌面版**：下载 [`ip-blindbox-pipeline.zip`](https://github.com/bigchen316/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip)，在 Claude 的设置里找到 Skills（技能），上传这个 zip 即可。
 
 ## 仓库内容
 
 | 路径 | 是什么 |
 | --- | --- |
 | [`docs/产品介绍.md`](docs/产品介绍.md) | 产品介绍：IP 形象、款式表、包装、开盒体验、制作方式、规格 |
-| [`site/index.html`](site/index.html) | 产品介绍展示网页，在线看：https://__GHUSER__.github.io/daba-cyber-blindbox/site/ |
+| [`site/index.html`](site/index.html) | 产品介绍展示网页，在线看：https://bigchen316.github.io/daba-cyber-blindbox/site/ |
 | [`skills/ip-blindbox-pipeline/`](skills/ip-blindbox-pipeline/) | 工作流 skill：`SKILL.md` + 3 个 Blender 渲染脚本 + 一键生成开盒网页的 `build_site.py` |
 | [`ip-blindbox-pipeline.zip`](ip-blindbox-pipeline.zip) | skill 打包，给 Claude 网页版 / 桌面版上传用 |
 

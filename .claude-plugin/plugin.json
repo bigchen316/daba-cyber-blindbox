@@ -2,5 +2,5 @@
   "name": "ip-blindbox-pipeline",
   "description": "把一个IP形象做成盲盒产品全套：2D款式设计→混元3D建模→盒面设计→Blender渲染→可开盒的盲盒网页与产品介绍。",
   "version": "1.0.0",
-  "author": { "name": "__GHUSER__" }
+  "author": { "name": "bigchen316" }
 }

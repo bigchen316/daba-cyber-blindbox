@@ -1,6 +1,6 @@
 {
   "name": "daba-skills",
-  "owner": { "name": "__GHUSER__" },
+  "owner": { "name": "bigchen316" },
   "plugins": [
     {
       "name": "ip-blindbox-pipeline",
