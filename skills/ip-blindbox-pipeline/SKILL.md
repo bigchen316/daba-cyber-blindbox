@@ -6,7 +6,32 @@ description: 把一个IP形象做成盲盒产品全套：2D款式设计→混元
 # IP 盲盒快捷工作流（通用版）
 
 把一个已有的 IP 形象，做成「N 款公仔 + 隐藏款 + 彩蛋」的盲盒，并产出：印刷盒面、照片级渲染、在线开盒网页、产品介绍。
-参考成品：大巴赛博盲盒（本仓库 `docs/产品介绍.md`、`site/index.html`）。新项目优先复用这套网页源码和 Blender 脚本，只换素材和文案。
+参考成品：大巴赛博盲盒（https://github.com/__GHUSER__/daba-cyber-blindbox 的 `docs/产品介绍.md`、`site/index.html`）。如果用户手上已有一套做好的网页源码和 Blender 脚本，优先复用，只换素材和文案；没有就按下面每一步的规格从头写。
+
+## 工具包（本 skill 自带，开箱即用）
+
+```
+scripts/blender/1_产品主图.py     产品主图：盒子 + 公仔 + 星空背景
+scripts/blender/2_盒子转盘.py     盒子 360°：72 帧透明背景
+scripts/blender/3_公仔转盘.py     公仔 360°：每款 24 帧 + 正面主图
+scripts/site/build_site.py       渲染图 → 可开盒网页（index.html + figs/）
+scripts/site/template.html       开盒网页模板（星空陈列台、炸开、公仔可转、收藏、集齐召唤彩蛋）
+scripts/site/config.example.json 系列配置示例（大巴赛博盲盒）
+```
+
+让用户按这个结构建一个项目文件夹，三个 Blender 脚本只需要改顶部的 `BASE`：
+
+```
+<项目文件夹>/
+  config.json        复制 config.example.json 改：标题、slogan、每款的名字/描述、哪款是隐藏款、彩蛋
+  盒面/              正面.png 背面.png 左侧面.png 右侧面.png 顶面.png 底面.png
+  3D模型/            01_基础款.glb …（文件名 = config.json 里的 model）
+  渲染/              Blender 脚本自动输出
+  网页/              build_site.py 自动输出
+```
+
+脚本顶部 `QUICK_TEST = True` 先出小图试跑（4 帧、低采样），构图没问题再改回 `False`。
+网页：`pip install pillow numpy` 后运行 `python scripts/site/build_site.py <项目文件夹>`。
 
 ## 0. 开工前先问清（一次问完）
 - IP 名字、识别特征（颜色/服装/标志物）、系列主题和一句 slogan
@@ -32,7 +57,7 @@ description: 把一个IP形象做成盲盒产品全套：2D款式设计→混元
 - 正面的公仔用 Blender 渲染图（去底座、加椭圆软阴影），不要用 2D 图硬抠，会抠坏白色鞋子。
 - 先出 2~3 个配色方向给用户选，定稿后其余版本归为过渡文件。
 
-## 4. Blender 渲染（三个脚本）
+## 4. Blender 渲染（三个脚本，见 scripts/blender）
 - `产品主图`：盒子 + 公仔 + 星空/主题背景。
 - `单盒转盘`：72 帧（每 5°）、透明背景、1600×2000、采样 160；有 `REDO=[帧号]` 只补渲坏帧。
 - `公仔转盘`：每款 24 帧（每 15°）+ 一张 -20° 正面主图，1200×1500、采样 128；`ONLY=["02_篮球款"]` 一次只渲一款，防止电脑卡和闪退。
@@ -47,8 +72,8 @@ description: 把一个IP形象做成盲盒产品全套：2D款式设计→混元
 - 用户改了脚本后一定提醒：Blender 文本编辑器要「文本→重新载入」，否则跑的还是旧代码。
 - 渲完后先抽查：每款看 f_00 和 f_12 是否真的转了；同一组帧文件大小几乎一样 = 没转。
 
-## 5. 盲盒网页
-- 用参考源码 `template.html + build.py`：
+## 5. 盲盒网页（scripts/site/build_site.py 一条命令生成）
+- 结构：一个网页模板 + 一个拼装脚本（把渲染帧、公仔图、盒面贴图转成 data URI 填进模板）：
   - 盒子转盘：72 帧裁切后转 webp（960×1200，质量 86）内嵌，拖动按角度切帧，不做相邻帧淡入（会重影）。
   - 开盒：盒子抖动鼓起 → 炸成满屏星星（canvas 粒子）→ 盒子消失、公仔高高跳出、落地压扁回弹；隐藏款用金色星星。
   - 公仔可转：每款 24 帧拼成 6×4 精灵图（单元 560px，webp 80），作为同目录 `figs/*.webp` 文件发布，不内嵌。

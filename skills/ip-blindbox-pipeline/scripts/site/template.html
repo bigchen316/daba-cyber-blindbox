@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@400;700;900&display=swap">
+<style>
+/* 盲盒开盒页：左边星空陈列台（盒子 → 炸开 → 公仔），右边标题 + 收藏栏 */
+:root{
+  --bg:#f4f3ee; --fg:#17150f; --muted:#6b675c; --line:#dcd9cf; --accent:__ACCENT__; --ink:#17150f;
+  --night:#070a22; --night2:#1d1856;
+  --f-display:"ZCOOL QingKe HuangYou","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131210;--fg:#f1efe7;--muted:#a19c8f;--line:#2e2c27;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#131210;--fg:#f1efe7;--muted:#a19c8f;--line:#2e2c27;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:40px max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px))}
+.hero{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:48px;align-items:center}
+.stage-col{display:flex;flex-direction:column;align-items:center;gap:14px;min-width:0}
+.stage{position:relative;width:100%;aspect-ratio:4/5;border-radius:28px;overflow:hidden;container-type:inline-size;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;
+  box-shadow:0 18px 40px -18px rgba(20,16,60,.45);
+  background:radial-gradient(120% 60% at 50% 108%,rgba(120,90,220,.38),rgba(120,90,220,0) 60%),radial-gradient(70% 45% at 78% 18%,rgba(90,70,190,.30),rgba(90,70,190,0) 70%),linear-gradient(180deg,var(--night) 0%,#0f1240 55%,var(--night2) 100%)}
+.stage.dragging{cursor:grabbing}
+#sky{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.floor{position:absolute;left:18%;right:18%;bottom:6%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(150,130,255,.30),rgba(150,130,255,0))}
+.box{position:absolute;left:50%;bottom:2cqw;width:84cqw;margin-left:-42cqw;aspect-ratio:4/5;z-index:2;pointer-events:none}
+.box img{width:100%;height:100%;object-fit:contain}
+.halo{position:absolute;left:50%;top:44%;width:90cqw;height:90cqw;margin:-45cqw 0 0 -45cqw;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,120,.55),rgba(255,214,120,0));opacity:0;z-index:1;pointer-events:none}
+.figure,.figspin{position:absolute;left:50%;bottom:3cqw;width:70cqw;aspect-ratio:1/1;margin-left:-35cqw;transform-origin:50% 100%;opacity:0;pointer-events:none;z-index:3}
+.figure{height:auto}
+.figspin{background-size:600% 400%;background-repeat:no-repeat}
+.spinning .figspin{opacity:1}.spinning .figure{opacity:0!important}
+.flash{position:absolute;inset:0;background:#fffdf3;opacity:0;z-index:7;pointer-events:none}
+.hint{position:absolute;left:50%;top:4%;transform:translateX(-50%);z-index:6;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(6px);color:#fff;font-size:3.1cqw;font-weight:700;padding:1.2cqw 3.4cqw;border-radius:999px;white-space:nowrap;pointer-events:none}
+.eggfig{position:absolute;width:30cqw;margin-left:-15cqw;transform-origin:50% 100%;opacity:0;pointer-events:none;filter:drop-shadow(0 1cqw 1.2cqw rgba(0,0,0,.35))}
+.shelf{position:absolute;left:4%;right:4%;height:3.2cqw;z-index:4;border-radius:1.6cqw/1.2cqw;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(220,210,255,.55),rgba(140,120,230,.35) 40%,rgba(60,45,140,.55));box-shadow:0 0 3cqw rgba(150,130,255,.45),inset 0 .3cqw 0 rgba(255,255,255,.5)}
+.orb{position:absolute;width:30cqw;height:30cqw;border-radius:50%;z-index:8;pointer-events:none;transform:translate(-50%,-50%) scale(.3);background:radial-gradient(closest-side,#fff 0,#fff6c8 25%,rgba(255,216,77,.8) 45%,rgba(255,180,60,0) 100%)}
+.pillar{position:absolute;left:50%;top:-10%;bottom:0;width:26cqw;margin-left:-13cqw;z-index:6;pointer-events:none;transform-origin:50% 100%;background:linear-gradient(90deg,rgba(255,216,77,0),rgba(255,246,200,.95) 40%,#fff 50%,rgba(255,246,200,.95) 60%,rgba(255,216,77,0));filter:blur(.8cqw)}
+.eggstar{position:absolute;left:12cqw;bottom:4cqw;width:76cqw;z-index:7;pointer-events:none;filter:drop-shadow(0 0 4cqw rgba(255,216,77,.55));opacity:0}
+.bub{position:absolute;left:50%;top:5%;transform:translateX(-50%);z-index:9;background:#fff;color:var(--ink);border:.5cqw solid var(--ink);border-radius:2.4cqw;padding:1.2cqw 2.4cqw;font-size:3.6cqw;font-weight:900;white-space:nowrap;opacity:0;pointer-events:none}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{font:inherit;font-weight:700;font-size:15px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.result{min-height:1.7em;font-weight:700;text-align:center}
+.result span{font-weight:400;color:var(--muted)}
+.links{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.linkish{background:none;border:0;padding:0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,7vw,80px);line-height:1.05;margin:0}
+h1 b{color:var(--accent);font-weight:400}
+.slogan{font-family:var(--f-display);font-size:24px;margin:10px 0 18px;color:var(--muted)}
+.collect{border-top:1px solid var(--line);padding-top:18px;margin-top:22px}
+.collect-head{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px;margin-top:10px}
+.slot{aspect-ratio:1;border:1.5px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-size:13px;color:var(--muted);overflow:hidden}
+.slot.got{border-style:solid;border-color:var(--accent);background:rgba(255,196,0,.08)}
+.slot img{width:130%;max-width:none;margin-top:28%}
+.slot.hid{border-color:var(--accent)}
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:28px}.stage-col{max-width:480px;width:100%;margin:0 auto}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero" id="hero">
+    <div class="stage-col">
+      <div class="stage" id="stage">
+        <canvas id="sky"></canvas>
+        <div class="floor"></div>
+        <div class="halo" id="halo"></div>
+        <div class="box" id="box"><img id="boxImg" alt="__TITLE__ 360° 渲染"></div>
+        <img class="figure" id="figure" alt="">
+        <div class="figspin" id="figspin" aria-hidden="true"></div>
+        <div class="flash" id="flash"></div>
+        <span class="hint" id="hint">拖动转一圈 · 点盒子拆开</span>
+      </div>
+      <div class="btns"><button class="btn primary" id="openBtn" type="button">拆盲盒</button><button class="btn" id="againBtn" type="button" hidden>再拆一盒</button></div>
+      <div class="result" id="result" aria-live="polite"></div>
+      <div class="links"><button class="linkish" id="peekBtn" type="button">预览隐藏款（演示用）</button><button class="linkish" id="eggBtn" type="button">预览彩蛋（演示用）</button></div>
+    </div>
+    <div>
+      <h1>__TITLE_HTML__</h1>
+      <div class="slogan">__SLOGAN__</div>
+      <p>__INTRO__</p>
+      <div class="collect">
+        <div class="collect-head"><span>我的收藏</span><b id="count">0 / 0</b></div>
+        <div class="slots" id="slots"></div>
+        <div class="collect-head" style="margin-top:10px"><span>彩蛋：集齐全部款式后召唤 __EGG_NAME__</span><span id="eggTag">未解锁</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(()=>{
+const CFG=__CFG__, FR=__FRAMES__, IMGS=__IMGS__, SPR=__SPRITES__, HERO=__HERO__;
+const $=id=>document.getElementById(id);
+const hero=$('hero'),stage=$('stage'),box=$('box'),boxImg=$('boxImg'),figure=$('figure'),figspin=$('figspin'),halo=$('halo'),flash=$('flash'),hint=$('hint'),result=$('result'),openBtn=$('openBtn'),againBtn=$('againBtn');
+const LIST=CFG.figures, KEY='blindbox-'+CFG.id;
+let anims=[],timers=[],extras=[],busy=false,opened=false;
+const anim=(el,kf,o)=>{const a=el.animate(kf,{fill:'forwards',...o});anims.push(a);return a;};
+const at=(ms,fn)=>timers.push(setTimeout(fn,ms));
+let got={},eggDone=false;
+try{got=JSON.parse(localStorage.getItem(KEY)||'{}')||{};eggDone=localStorage.getItem(KEY+'-egg')==='1';}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(got));localStorage.setItem(KEY+'-egg',eggDone?'1':'0');}catch(e){}};
+
+// 收藏栏
+const slots=$('slots');
+LIST.forEach((it,i)=>{const s=document.createElement('div');s.className='slot'+(it.hidden?' hid':'');s.id='slot-'+it.key;s.title=it.name;slots.appendChild(s);});
+function paint(){let n=0;LIST.forEach((it,i)=>{const s=$('slot-'+it.key);if(got[it.key]){n++;s.classList.add('got');s.innerHTML=`<img alt="${it.name}" src="${IMGS[it.key]}">`;}else{s.classList.remove('got');s.textContent=it.hidden?'隐':String(i+1);}});$('count').textContent=n+' / '+LIST.length;$('eggTag').textContent=eggDone?'已解锁':'未解锁';}
+paint();
+
+// 星空背景
+const sky=$('sky'),sc=sky.getContext('2d');let stars=[];
+function sizeSky(){const r=stage.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);sky.width=r.width*d;sky.height=r.height*d;sc.setTransform(d,0,0,d,0,0);stars=Array.from({length:120},()=>({x:Math.random()*r.width,y:Math.random()*r.height*.8,r:Math.random()<.1?1.3:Math.random()*.8+.3,p:Math.random()*6.3}));}
+sizeSky();addEventListener('resize',sizeSky);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function tw(t){const r=stage.getBoundingClientRect();sc.clearRect(0,0,r.width,r.height);for(const s of stars){sc.globalAlpha=reduce?.8:.5+.5*Math.sin(t/800+s.p);sc.fillStyle='#fff6dc';sc.beginPath();sc.arc(s.x,s.y,s.r,0,6.3);sc.fill();}sc.globalAlpha=1;if(!reduce)requestAnimationFrame(tw);})(0);
+
+// 盒子 360°
+FR.forEach(s=>{const i=new Image();i.src=s;});
+let ang=0,lastF=-1,drag=null,moved=0;
+const showBox=()=>{const n=FR.length,f=((Math.round(ang/(360/n))%n)+n)%n;if(f!==lastF){boxImg.src=FR[f];lastF=f;}};
+showBox();
+
+// 公仔转动（24 帧精灵图）
+let spinK=null,spinF=23,spinN=24;
+function setSpin(f){spinF=((Math.round(f)%spinN)+spinN)%spinN;const c=spinF%6,r=(spinF/6)|0,rows=Math.ceil(spinN/6);figspin.style.backgroundSize=`600% ${rows*100}%`;figspin.style.backgroundPosition=`${c*20}% ${rows>1?r*100/(rows-1):0}%`;}
+function loadSpin(k){spinK=k;const s=SPR[k];if(!s)return;spinN=s.n;const im=new Image();im.onload=()=>{if(spinK!==k||!opened)return;figspin.style.backgroundImage=`url("${s.url}")`;setSpin(spinN-1);hint.textContent='左右拖动，公仔转一圈';hint.hidden=false;};im.src=s.url;}
+
+stage.addEventListener('pointerdown',e=>{if(busy)return;drag={x:e.clientX,a:ang,f:spinF,w:stage.getBoundingClientRect().width};moved=0;stage.classList.add('dragging');try{stage.setPointerCapture(e.pointerId);}catch(_){}});
+stage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x;moved=Math.max(moved,Math.abs(dx));if(opened){if(spinK&&figspin.style.backgroundImage&&moved>3){hero.classList.add('spinning');hint.hidden=true;setSpin(drag.f+dx/(drag.w*.9)*spinN);}}else{ang=drag.a+dx*.6;showBox();}});
+const endDrag=()=>{const click=drag&&moved<5;drag=null;stage.classList.remove('dragging');if(click&&!opened&&!busy)open();};
+stage.addEventListener('pointerup',endDrag);stage.addEventListener('pointercancel',()=>{drag=null;stage.classList.remove('dragging');});
+
+// 抽一款
+function draw(forceHidden){const hid=LIST.filter(x=>x.hidden),reg=LIST.filter(x=>!x.hidden);if(forceHidden&&hid.length)return hid[0];if(hid.length&&Math.random()<CFG.hiddenRate)return hid[(Math.random()*hid.length)|0];return reg[(Math.random()*reg.length)|0];}
+
+// 炸开的星星
+function starBurst(gold){const r=stage.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);const cv=document.createElement('canvas');cv.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:8;pointer-events:none';cv.width=r.width*d;cv.height=r.height*d;stage.appendChild(cv);extras.push(cv);const c=cv.getContext('2d');c.scale(d,d);
+  const ox=r.width/2,oy=r.height*.55,U=r.width/480;const cols=gold?['#FFD84D','#FFC24A','#FFF3C2','#E8B24A','#fff']:['#FFC24A','#FFE1A8','#F4ECDD','#E9866A','#9CC3DE','#fff'];
+  const P=Array.from({length:gold?230:170},(_,i)=>{const a=Math.random()*6.283,v=(3+Math.random()*11)*U;return{x:ox,y:oy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4*U,s:(5+Math.random()*16)*U,rot:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[i%cols.length],life:1.6+Math.random()*1.3,tw:Math.random()*6};});
+  const star=(x,y,R,rot)=>{c.beginPath();for(let k=0;k<10;k++){const rr=k%2?R*.45:R,aa=rot+k*Math.PI/5;c.lineTo(x+Math.cos(aa)*rr,y+Math.sin(aa)*rr);}c.closePath();};
+  const t0=performance.now();let last=t0;
+  (function fr(now){const dt=Math.max(0,Math.min(.05,(now-last)/1000)),el=Math.max(0,(now-t0)/1000);last=now;c.clearRect(0,0,r.width,r.height);
+    if(el<.6){const k=el/.6;c.beginPath();c.arc(ox,oy,Math.max(1,k*r.width*.7),0,6.283);c.strokeStyle=`rgba(255,214,120,${(1-k)*.7})`;c.lineWidth=Math.max(.5,(1-k)*18*U);c.stroke();}
+    let alive=0;for(const p of P){const k=el/p.life;if(k>=1)continue;alive++;p.vx*=.985;p.vy=p.vy*.985+.16*U*dt*60;p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.rot+=p.vr*dt*60;c.globalAlpha=Math.max(0,(k<.75?1:(1-k)/.25)*(.65+.35*Math.sin(el*14+p.tw)));c.fillStyle=p.c;star(p.x,p.y,Math.max(.5,p.s*(1-k*.3)),p.rot);c.fill();}
+    c.globalAlpha=1;if(alive>0)requestAnimationFrame(fr);else cv.remove();})(t0);}
+
+// 开盒
+function open(forceHidden,forceEgg){if(busy||opened)return;busy=true;hint.hidden=true;openBtn.hidden=true;const it=draw(forceHidden);figure.src=IMGS[it.key];figure.alt=it.name;result.textContent='';
+  anim(box,[{transform:'none'},{transform:'translateX(-1%) rotate(-3deg) scale(1.02)',offset:.15},{transform:'translateX(1%) rotate(3deg) scale(1.03)',offset:.32},{transform:'translate(-1%,-1%) rotate(-4deg) scale(1.05)',offset:.5},{transform:'translate(1%,-1%) rotate(4deg) scale(1.07)',offset:.68},{transform:'translateY(-2%) scale(1.12,1.06)',offset:.88},{transform:'translateY(-1%) scale(1.16,1.1)'}],{duration:720,easing:'ease-in'});
+  at(720,()=>{anim(box,[{opacity:1,transform:'scale(1.16,1.1)'},{opacity:0,transform:'scale(1.5)'}],{duration:180,easing:'ease-out'});
+    anim(flash,[{opacity:0},{opacity:it.hidden?.95:.8,offset:.15},{opacity:0}],{duration:520,fill:'none'});starBurst(it.hidden);
+    anim(halo,[{opacity:0,transform:'scale(.3)'},{opacity:1,transform:'scale(1.25)',offset:.4},{opacity:.6,transform:'scale(1)'}],{duration:1400,easing:'ease-out'});
+    anim(figure,[{transform:'translate(-2cqw,-42cqw) scale(.18)',opacity:0},{transform:'translate(-4cqw,-58cqw) scale(.5) rotate(-6deg)',opacity:1,offset:.18},{transform:'translate(0,-66cqw) scale(.9) rotate(8deg)',opacity:1,offset:.45},{transform:'translate(0,0) scale(1.1,.88)',opacity:1,offset:.76},{transform:'translate(0,-3cqw) scale(.96,1.05)',opacity:1,offset:.88},{transform:'none',opacity:1}],{duration:1350,easing:'cubic-bezier(.3,.6,.4,1)'});});
+  at(2300,()=>finish(it,forceEgg));}
+function finish(it,forceEgg){busy=false;opened=true;anims.forEach(a=>{try{a.finish()}catch(e){}});figure.style.opacity=1;
+  got[it.key]=1;save();paint();result.innerHTML=it.hidden?`开出了隐藏款！<span>${it.name} · 概率 ${CFG.hiddenRateText}</span>`:`开出了：${it.name} <span>· ${it.desc||''}</span>`;
+  againBtn.hidden=false;loadSpin(it.key);if(forceEgg||LIST.every(x=>got[x.key])){againBtn.hidden=true;at(900,summon);}}
+function reset(){timers.forEach(clearTimeout);timers=[];anims.forEach(a=>{try{a.cancel()}catch(e){}});anims=[];extras.forEach(e=>e.remove());extras=[];
+  busy=false;opened=false;spinK=null;hero.classList.remove('spinning');figspin.style.backgroundImage='';figure.removeAttribute('style');box.removeAttribute('style');halo.removeAttribute('style');
+  hint.textContent='拖动转一圈 · 点盒子拆开';hint.hidden=false;openBtn.hidden=false;againBtn.hidden=true;result.textContent='';}
+
+// 彩蛋：全部款式站上两层展台 → 化成星光汇聚 → 召唤彩蛋角色
+function summon(){hero.classList.remove('spinning');spinK=null;hint.hidden=true;anim(figure,[{opacity:1},{opacity:0}],{duration:300});anim(halo,[{opacity:.6},{opacity:.35}],{duration:400});
+  result.innerHTML=`集齐全部 ${LIST.length} 款！`;const n=LIST.length,top=Math.ceil(n/2),bot=n-top;const xs=k=>Array.from({length:k},(_,i)=>(i+.5)*100/k);
+  const pos=[...xs(top).map(x=>[x,47,.82]),...xs(bot).map(x=>[x,11,.82])];
+  [47,11].slice(0,bot?2:1).forEach((b,j)=>{const sh=document.createElement('span');sh.className='shelf';sh.style.bottom=`calc(${b}% - 2.2cqw)`;stage.appendChild(sh);extras.push(sh);anim(sh,[{opacity:0,transform:'scaleX(.2)'},{opacity:1,transform:'scaleX(1)'}],{duration:450,delay:j*120});});
+  const figs=LIST.map((it,i)=>{const [L,B,S]=pos[i];const f=document.createElement('img');f.className='eggfig';f.src=IMGS[it.key];f.alt=it.name;f.style.left=L+'%';f.style.bottom=B+'%';f.style.zIndex=5;stage.appendChild(f);extras.push(f);
+    anim(f,[{opacity:0,transform:`translateY(10cqw) scale(${S*.3})`},{opacity:1,transform:`translateY(-5cqw) scale(${S*1.06})`,offset:.6},{opacity:1,transform:`scale(${S})`}],{duration:520,delay:200+i*110});return{f,L,B,S};});
+  at(1500,()=>{result.textContent=`${n} 个公仔发光了……`;figs.forEach(({f},i)=>anim(f,[{filter:'brightness(1)'},{filter:'brightness(1.6) drop-shadow(0 0 3cqw #ffd84d)'}],{duration:600,delay:i*60}));});
+  let orb;at(2300,()=>{stage.querySelectorAll('.shelf').forEach(sh=>anim(sh,[{opacity:1},{opacity:0}],{duration:900,delay:900}));orb=document.createElement('span');orb.className='orb';orb.style.left='50%';orb.style.top='46%';stage.appendChild(orb);extras.push(orb);
+    figs.forEach(({f,L,B,S},i)=>{const dx=50-L,dy=-(125*.54-B*1.25-10);anim(f,[{transform:`scale(${S})`,opacity:1},{transform:`translate(${dx*.35}cqw,${dy*.35-6}cqw) scale(${S*.7}) rotate(${i%2?20:-20}deg)`,opacity:1,offset:.45},{transform:`translate(${dx}cqw,${dy}cqw) scale(.05) rotate(${i%2?90:-90}deg)`,opacity:0}],{duration:900,delay:i*130,easing:'cubic-bezier(.6,0,.4,1)'});
+      at(900+i*130,()=>anim(orb,[{transform:`translate(-50%,-50%) scale(${.4+i*.12})`},{transform:`translate(-50%,-50%) scale(${.6+i*.14})`},{transform:`translate(-50%,-50%) scale(${.5+i*.13})`}],{duration:260}));});
+    result.textContent='星光在汇聚……';});
+  const T=2300+900+n*130+200;
+  at(T,()=>{anim(orb,[{transform:'translate(-50%,-50%) scale(1.5)'},{transform:'translate(-50%,-50%) scale(.6)',offset:.35},{transform:'translate(-50%,-50%) scale(5)',opacity:0}],{duration:900,easing:'ease-in'});
+    const pl=document.createElement('span');pl.className='pillar';stage.appendChild(pl);extras.push(pl);anim(pl,[{transform:'scaleX(0)',opacity:0},{transform:'scaleX(1)',opacity:1,offset:.25},{transform:'scaleX(1.4)',opacity:1,offset:.6},{transform:'scaleX(2.5)',opacity:0}],{duration:1600});
+    anim(flash,[{opacity:0},{opacity:0,offset:.3},{opacity:1,offset:.45},{opacity:0}],{duration:1400,fill:'none'});starBurst(true);});
+  at(T+600,()=>{const h=document.createElement('img');h.className='eggstar';h.src=HERO;h.alt=CFG.egg.name;stage.appendChild(h);extras.push(h);
+    anim(h,[{transform:'translateY(6cqw) scale(.2)',opacity:0},{transform:'translateY(-6cqw) scale(1.08)',opacity:1,offset:.55},{transform:'none',opacity:1}],{duration:900,easing:'cubic-bezier(.3,.8,.3,1)'});
+    at(900,()=>{const b=document.createElement('span');b.className='bub';b.textContent=CFG.egg.line;stage.appendChild(b);extras.push(b);anim(b,[{opacity:0},{opacity:1,offset:.1},{opacity:1,offset:.9},{opacity:0}],{duration:2800});
+      eggDone=true;save();paint();result.innerHTML=`召唤成功：${CFG.egg.name}！<span>· 彩蛋已解锁 · 不在盒中出售</span>`;againBtn.hidden=false;});});}
+
+openBtn.addEventListener('click',()=>open());
+againBtn.addEventListener('click',reset);
+$('peekBtn').addEventListener('click',()=>{if(busy)return;reset();setTimeout(()=>open(true),200);});
+$('eggBtn').addEventListener('click',()=>{if(busy)return;reset();setTimeout(()=>open(false,true),200);});
+})();
+</script>
+</body>
+</html>

@@ -4,13 +4,39 @@
 
 ![大巴全款](docs/images/lineup.jpg)
 
+## 一键安装 Skill：IP 盲盒快捷工作流
+
+把任意 IP 形象做成盲盒全套：2D 款式设计 → 混元3D 建模 → 盒面设计 → Blender 渲染 → 可开盒的盲盒网页 → 产品介绍。装好后对 Claude 说「帮我把我的 IP 做成盲盒」就会按这套流程走。skill 自带 3 个 Blender 渲染脚本和一键生成开盒网页的脚本，只要改一下项目文件夹路径就能用。
+
+**Claude Code（macOS / Linux）**，复制到终端回车：
+
+```bash
+mkdir -p ~/.claude/skills && curl -fsSL https://github.com/__GHUSER__/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip -o /tmp/ip-blindbox-pipeline.zip && unzip -oq /tmp/ip-blindbox-pipeline.zip -d ~/.claude/skills
+```
+
+**Claude Code（Windows PowerShell）**，复制到 PowerShell 回车：
+
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null; Invoke-WebRequest https://github.com/__GHUSER__/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip -OutFile "$env:TEMP\ip-blindbox-pipeline.zip"; Expand-Archive -Force "$env:TEMP\ip-blindbox-pipeline.zip" "$HOME\.claude\skills"
+```
+
+**Claude Code 插件方式**，在 Claude Code 里依次输入：
+
+```
+/plugin marketplace add __GHUSER__/daba-cyber-blindbox
+/plugin install ip-blindbox-pipeline@daba-skills
+```
+
+**Claude 网页版 / 桌面版**：下载 [`ip-blindbox-pipeline.zip`](https://github.com/__GHUSER__/daba-cyber-blindbox/raw/main/ip-blindbox-pipeline.zip)，在 Claude 的设置里找到 Skills（技能），上传这个 zip 即可。
+
 ## 仓库内容
 
 | 路径 | 是什么 |
 | --- | --- |
 | [`docs/产品介绍.md`](docs/产品介绍.md) | 产品介绍：IP 形象、款式表、包装、开盒体验、制作方式、规格 |
-| [`site/index.html`](site/index.html) | 产品介绍展示网页（单文件，下载后用浏览器打开；首屏盒子可拖动旋转） |
-| [`skills/ip-blindbox-pipeline/SKILL.md`](skills/ip-blindbox-pipeline/SKILL.md) | 通用工作流 skill：2D 设计 → 混元3D → 盒面 → Blender 渲染 → 盲盒网页 → 产品介绍 |
+| [`site/index.html`](site/index.html) | 产品介绍展示网页，在线看：https://__GHUSER__.github.io/daba-cyber-blindbox/site/ |
+| [`skills/ip-blindbox-pipeline/`](skills/ip-blindbox-pipeline/) | 工作流 skill：`SKILL.md` + 3 个 Blender 渲染脚本 + 一键生成开盒网页的 `build_site.py` |
+| [`ip-blindbox-pipeline.zip`](ip-blindbox-pipeline.zip) | skill 打包，给 Claude 网页版 / 桌面版上传用 |
 
 ## 制作流程
 
@@ -20,4 +46,7 @@
 4. Blender 渲染（产品图、盒子 72 帧转盘、公仔 24 帧转盘）
 5. 盲盒网页（拖动看盒、开盒星星炸开、公仔可转、集齐 8 款召唤彩蛋）
 
-© 大巴 IP 形象及相关设计为原创作品，保留所有权利。
+## 授权
+
+- `skills/` 里的工作流：MIT，随便用、随便改。
+- 「大巴」IP 形象、公仔图、盒面等设计素材为原创作品，保留所有权利，未经许可请勿商用。

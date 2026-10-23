@@ -1,0 +1,11 @@
+{
+  "name": "daba-skills",
+  "owner": { "name": "__GHUSER__" },
+  "plugins": [
+    {
+      "name": "ip-blindbox-pipeline",
+      "source": "./",
+      "description": "IP 盲盒快捷工作流：2D设计→混元3D→盒面→Blender渲染→盲盒网页→产品介绍"
+    }
+  ]
+}
